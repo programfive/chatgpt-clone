@@ -767,3 +767,18 @@
 .cl-internal-15hkgn2{
     background: inherit !important;
 }
+
+.cl-navbarMobileMenuRow {
+  background: var(--clerk-bg) !important;
+}
+
+.cl-navbarMobileMenuButton,
+.cl-navbarMobileMenuButton[data-variant='ghost'] {
+  background: var(--clerk-bg) !important;
+  color: var(--clerk-text) !important;
+}
+
+.cl-navbarMobileMenuButton:hover,
+.cl-navbarMobileMenuButton[data-variant='ghost']:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
