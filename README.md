@@ -1,6 +1,10 @@
 # ChatGPT Clone (Next.js)
 
-Clon de ChatGPT construido con **Next.js App Router**, **Clerk** para autenticación, **Prisma + PostgreSQL** para persistencia y **Cloudinary** para subida de archivos. Incluye chats de grupo mediante enlaces compartibles, chat temporal y soporte de adjuntos.
+Clon de ChatGPT construido con **Next.js App Router**, **Clerk** para autenticación, **Prisma + PostgreSQL (Neon.tech)** para persistencia y **Cloudinary** para subida de archivos. Incluye chats de grupo mediante enlaces compartibles, chat temporal y soporte de adjuntos.
+
+## Mockup
+
+![Mockup](./public/mockup.png)
 
 ## Features
 
@@ -18,14 +22,14 @@ Clon de ChatGPT construido con **Next.js App Router**, **Clerk** para autenticac
 
 - **Next.js 16 (Turbopack)** / React 19
 - **Clerk** (Auth)
-- **Prisma** + **PostgreSQL**
+- **Prisma** + **PostgreSQL (Neon.tech)**
 - **Cloudinary** (uploads)
 - **TailwindCSS**
 
 ## Requisitos
 
 - Node.js 18+ (recomendado 20+)
-- Una base de datos PostgreSQL
+- Una base de datos PostgreSQL (recomendado: Neon.tech)
 - Cuenta de Clerk
 - Cuenta de Cloudinary (para uploads)
 
@@ -40,8 +44,10 @@ npm install
 2) Crea tu archivo `.env` (no se versiona). Ejemplo de variables típicas que vas a necesitar:
 
 ```bash
-# Database
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DB?schema=public"
+# Database (Neon.tech)
+# Copia el connection string desde el dashboard de Neon.
+# Recomendación: usa el string "pooled" (pgBouncer) para serverless.
+DATABASE_URL="postgresql://USER:PASSWORD@ep-xxxx-xxxxx.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
 # Clerk
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_..."
@@ -56,16 +62,16 @@ CLOUDINARY_API_KEY="..."
 CLOUDINARY_API_SECRET="..."
 ```
 
-3) Prisma: genera el cliente y aplica migraciones.
+3) Prisma: genera el cliente y sincroniza el schema.
 
-Si ya tienes migraciones en el repo:
+Si estás iterando rápido (mockups / desarrollo) puedes usar `db push`:
 
 ```bash
 npx prisma generate
-npx prisma migrate deploy
+npx prisma db push
 ```
 
-Si estás en desarrollo y quieres crear la primera migración (solo la primera vez):
+Si prefieres migraciones versionadas (recomendado para producción):
 
 ```bash
 npx prisma migrate dev
@@ -110,6 +116,7 @@ Archivo: `prisma/schema.prisma`
 
 - La config `export const config` en routes App Router está deprecada/ignorada.
 - Si ves warnings sobre `middleware` vs `proxy`, revisa la doc oficial de Next.js (cambios de convención).
+- Si usas Neon en producción, asegúrate de tener `DATABASE_URL` con `sslmode=require` y de configurar las variables de entorno también en Vercel.
 
 ## Licencia
 
