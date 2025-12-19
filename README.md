@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ChatGPT Clone (Next.js)
 
-## Getting Started
+Clon de ChatGPT construido con **Next.js App Router**, **Clerk** para autenticación, **Prisma + PostgreSQL** para persistencia y **Cloudinary** para subida de archivos. Incluye chats de grupo mediante enlaces compartibles, chat temporal y soporte de adjuntos.
 
-First, run the development server:
+## Features
+
+- **Chat UI estilo ChatGPT**
+- **Textarea autosize** (Enter envía, Shift+Enter nueva línea)
+- **Adjuntos con drag & drop** (react-dropzone) y múltiples archivos
+- **Uploads** a Cloudinary (en chat normal)
+- **Chat temporal** (no persiste conversación / adjuntos como base64 para el request)
+- **Conversaciones** con historial
+- **Chats de grupo** por enlace compartido (`SharedLink`) + flujo de join
+- **Miembros** por conversación (`ConversationMember`)
+- **Auth** con Clerk (`syncUser()`)
+
+## Tech stack
+
+- **Next.js 16 (Turbopack)** / React 19
+- **Clerk** (Auth)
+- **Prisma** + **PostgreSQL**
+- **Cloudinary** (uploads)
+- **TailwindCSS**
+
+## Requisitos
+
+- Node.js 18+ (recomendado 20+)
+- Una base de datos PostgreSQL
+- Cuenta de Clerk
+- Cuenta de Cloudinary (para uploads)
+
+## Instalación
+
+1) Instala dependencias:
+
+```bash
+npm install
+```
+
+2) Crea tu archivo `.env` (no se versiona). Ejemplo de variables típicas que vas a necesitar:
+
+```bash
+# Database
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DB?schema=public"
+
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_..."
+CLERK_SECRET_KEY="sk_..."
+
+# Opcional: URLs de redirect/host si lo usas en Clerk
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME="..."
+CLOUDINARY_API_KEY="..."
+CLOUDINARY_API_SECRET="..."
+```
+
+3) Prisma: genera el cliente y aplica migraciones.
+
+Si ya tienes migraciones en el repo:
+
+```bash
+npx prisma generate
+npx prisma migrate deploy
+```
+
+Si estás en desarrollo y quieres crear la primera migración (solo la primera vez):
+
+```bash
+npx prisma migrate dev
+```
+
+4) Levanta el servidor:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` — modo desarrollo
+- `npm run build` — build de producción
+- `npm run start` — iniciar build
+- `npm run lint` — lint
 
-## Learn More
+## Modelo de datos (Prisma)
 
-To learn more about Next.js, take a look at the following resources:
+- **User**: usuario sincronizado desde Clerk
+- **Conversation**: chat (owner = `userId`)
+- **SharedLink**: enlace único para compartir conversación (token único)
+- **ConversationMember**: membresías para chats de grupo
+- **Message**: mensajes por conversación
+- **Upload**: adjuntos persistidos (Cloudinary)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Archivo: `prisma/schema.prisma`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Endpoints principales (App Router)
 
-## Deploy on Vercel
+- `POST /api/chat` — chat persistente
+- `POST /api/chat/temporary` — chat temporal
+- `GET /api/conversations` — lista de conversaciones
+- `POST /api/upload` — upload multiple (multipart/form-data)
+- `GET|POST|PATCH|DELETE /api/conversations/[id]/share` — gestionar enlace compartido
+- `GET /join/[token]` — unirse a un grupo por token
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Notas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- La config `export const config` en routes App Router está deprecada/ignorada.
+- Si ves warnings sobre `middleware` vs `proxy`, revisa la doc oficial de Next.js (cambios de convención).
+
+## Licencia
+
+Proyecto personal / educativo. Ajusta la licencia según tus necesidades.
