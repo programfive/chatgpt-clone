@@ -92,19 +92,23 @@ export default function Header({
   }, [menuOpen, groupMenuOpen]);
 
   return (
-    <header className="flex items-center justify-between px-3 sm:px-4 py-3 relative">
+    <header className="flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 relative gap-2">
       {/* Left - Menu + Model Selector */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
         <SignedOut>
           <Logo className="text-white" width={24} height={24} />
         </SignedOut>
         {/* Mobile Menu Button */}
-        <button
-          onClick={onMenuClick}
-          className="lg:hidden p-2 hover:bg-[#2f2f2f] rounded-lg transition-colors"
-        >
-          <Menu size={20} className="text-[#f3f3f3]" />
-        </button>
+        <SignedIn>
+          <button
+            onClick={onMenuClick}
+            className="lg:hidden p-2 hover:bg-[#2f2f2f] rounded-lg transition-colors"
+            aria-label="Abrir menú"
+            type="button"
+          >
+            <Menu size={20} className="text-[#f3f3f3]" />
+          </button>
+        </SignedIn>
 
         {isGroupChat ? (
           <div className="relative" ref={groupMenuRef}>
@@ -180,10 +184,12 @@ export default function Header({
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 hover:bg-[#2f2f2f] rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 hover:bg-[#2f2f2f] rounded-lg transition-colors min-w-0"
               type="button"
             >
-              <span className="text-[#f3f3f3] font-medium text-sm sm:text-base">{selectedModel.label}</span>
+              <span className="text-[#f3f3f3] font-medium text-sm sm:text-base truncate max-w-[92px] sm:max-w-none">
+                {selectedModel.label}
+              </span>
               <ChevronDown size={16} className="text-[#afafaf]" />
             </button>
 
@@ -224,7 +230,7 @@ export default function Header({
         </div>
       ) : null}
 
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         <SignedIn>
           {!isGroupChat && !isTemporaryChat && (
             <>
@@ -234,7 +240,7 @@ export default function Header({
                   <Brain size={18} className="sm:w-5 sm:h-5" />
                   <span className="text-xs sm:text-sm pl-1.5 sm:pl-2 font-semibold hidden md:inline">Memoria llena</span>
                 </button>
-                <div className="pointer-events-none absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden w-64 max-w-[min(22rem,calc(100vw-2rem))] rounded-2xl bg-[#101010] px-4 py-3 text-left text-sm text-white shadow-lg group-hover:block">
+                <div className="pointer-events-none absolute top-full mt-2 right-0 md:left-1/2 md:-translate-x-1/2 md:right-auto hidden w-64 max-w-[min(22rem,calc(100vw-2rem))] rounded-2xl bg-[#101010] px-4 py-3 text-left text-sm text-white shadow-lg group-hover:block">
                   <p className="text-[13px] leading-snug">
                     ChatGPT se ha quedado sin espacio para las memorias guardadas.{' '}
                     <span className="text-[#5b95ff] underline cursor-pointer">Gestiona las memorias guardadas</span> para crear más espacio.
@@ -250,7 +256,7 @@ export default function Header({
                 >
                   <UserPlus size={18} className="sm:w-5 sm:h-5" />
                 </button>
-                <div className="pointer-events-none absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden w-40 max-w-[min(16rem,calc(100vw-2rem))] rounded-2xl bg-[#101010] px-3 py-2 text-center text-xs text-white shadow-lg group-hover:block">
+                <div className="pointer-events-none absolute top-full mt-2 hidden w-40 max-w-[min(16rem,calc(100vw-2rem))] rounded-2xl bg-[#101010] px-3 py-2 text-center text-xs text-white shadow-lg group-hover:block right-0 md:left-1/2 md:-translate-x-1/2 md:right-auto">
                   Añadir persona
                 </div>
               </div>
@@ -302,14 +308,14 @@ export default function Header({
         </SignedIn>
 
         <SignedOut>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <SignInButton mode="modal">
-              <button className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-white/90">
+              <button className="rounded-full bg-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-black transition-colors hover:bg-white/90 whitespace-nowrap">
                 Iniciar sesión
               </button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <button className="rounded-full border border-white/60 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/5">
+              <button className="hidden sm:inline-flex rounded-full border border-white/60 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/5 whitespace-nowrap">
                 Registrarse gratuitamente
               </button>
             </SignUpButton>

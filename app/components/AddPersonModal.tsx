@@ -282,7 +282,7 @@ export default function AddPersonModal({
               </button>
               <button
                 onClick={handleCopyLink}
-                className="px-4 py-2 text-sm font-medium text-black bg-white rounded-full hover:bg-gray-200 transition-colors flex items-center gap-2"
+                className="px-4 py-2 text-sm font-medium text-black bg-white rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
               >
                 {copied ? (
                   <>

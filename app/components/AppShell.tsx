@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { SignedIn, useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 
 import Sidebar, { SidebarConversation } from '@/app/components/Sidebar';
 import Header, { type GptModelOption, gptModels } from '@/app/components/Header';
@@ -93,7 +93,7 @@ function ChatShell({
       }}
     >
       <div className="flex h-screen overflow-hidden">
-        <SignedIn>
+        {isSignedIn ? (
           <Sidebar
             isOpen={sidebarOpen}
             onToggle={() => setSidebarOpen((prev) => !prev)}
@@ -104,9 +104,9 @@ function ChatShell({
             onSearch={() => setIsSearchOpen(true)}
             onRefreshConversations={fetchConversations}
           />
-        </SignedIn>
+        ) : null}
 
-        <main className="flex-1 flex flex-col bg-[var(--main-bg)] relative overflow-hidden w-full">
+        <main className="flex-1 flex flex-col bg-[var(--main-bg)] relative overflow-hidden w-full pb-[env(safe-area-inset-bottom)]">
           <Suspense fallback={null}>
             <Header
               onMenuClick={() => setSidebarOpen((prev) => !prev)}
